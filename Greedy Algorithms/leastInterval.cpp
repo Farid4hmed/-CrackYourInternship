@@ -1,19 +1,16 @@
 class Solution {
 public:
     int leastInterval(vector<char>& tasks, int n) {
-        int count[26] = {0};
-        for(auto x: tasks){
-            count[x-'A']++;
-        }
-        sort(count, count+26);
-        int max_val = count[25] - 1;
-        int idle_slots = max_val * n;
-        
-        for(int i=24; i>=0; i--){
-            if(count[i] == max_val+1)idle_slots -= count[i]-1;
-            else idle_slots -= count[i];
+        unordered_map<char,int>mp;
+        int count = 0;
+        for(auto e : tasks)
+        {
+            mp[e]++;
+            count = max(count, mp[e]);
         }
         
-        return idle_slots > 0 ? idle_slots+tasks.size() : tasks.size();
+        int ans = (count-1)*(n+1);
+        for(auto e : mp) if(e.second == count) ans++;
+        return max((int)tasks.size(), ans);
     }
 };
